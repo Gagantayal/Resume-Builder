@@ -1,0 +1,103 @@
+const mongoose=require('mongoose');
+
+const schema=mongoose.Schema;
+
+const userschema=new schema({
+    email:{
+        type:String,
+        required:true,
+        unique:true
+    },
+
+    password:{
+        type:String,
+        default:"null"
+    },
+        otp:{
+        type:String
+    },
+
+    expireotp:{
+        type:Date
+    },
+
+    token:{
+        type:String
+    },
+    firstname:{
+        type:String
+    },
+    lastname:{
+        type:String
+    },
+    jobtitle:{
+        type:String
+    },
+    number:{
+        type:Number
+    },
+    city:{
+        type:String
+    },
+    state:{
+        type:String
+    },
+    aboutme:{
+        type:String
+    },
+    tagline:{
+        type:String
+    },
+    languages:[{
+        type:String
+    }],
+    skills:[{
+        type:String
+    }],
+    education:[{
+        school:{
+                type:String
+        },
+        degree:{
+            type:String
+        },
+        syear:{
+            type:Number
+        },
+        gyear:{
+            type:Number
+        },
+        field:{
+            type:String
+        }
+    }
+    ],
+    experience:[{
+        jobtitle:{
+                type:String
+        },
+        projectname:{
+            type:String
+        },
+        startm:{
+            type:Number
+        },
+        starty:{
+            type:Number
+        },
+        endm:{
+            type:Number
+        },
+        endy:{
+            type:Number
+        },
+        description:{
+            type:String
+        }
+    }
+    ]
+    
+
+});
+
+module.exports=mongoose.model("user",userschema);

@@ -1,0 +1,50 @@
+const User = require('../model/user');
+const sgMail = require('@sendgrid/mail');
+const bcrypt=require("bcryptjs");
+const jwt=require("jsonwebtoken")
+
+const sent=async (req,res,next)=>{
+  try{
+  const emailId=req.body.email;
+  sgMail.setApiKey(process.env.sgapi);
+  const otpGenerator = require('otp-generator')
+  const old=req.user;
+  
+  const otp=otpGenerator.generate(4, { upperCaseAlphabets: false,lowerCaseAlphabets: false, specialChars: false });
+  
+  const msg = {
+    to: emailId,
+    from: 'gagantayal2003@gmail.com',
+    subject: 'OTP for CrushFind',
+    text: `Your otp is ${otp}`,
+  };
+  const msg2=await sgMail.send(msg);
+    if(msg2){
+      const hashotp=await bcrypt.hash(otp,12);
+      const token=jwt.sign({email:emailId.toLowerCase()},process.env.secretkey,{expiresIn:"1d"});
+      const updated= await User.updateOne({email:emailId.toLowerCase()},{
+        $set:{
+           otp:hashotp,
+           expireotp:Date.now()+120000,
+           token
+        }});        
+        if(!old)
+        return res.status(201).json({success:true,password:false,olduser:false,msg:"User created successfully. Check mail",token});
+        else
+        {
+          return res.status(201).json({success:true,password:false,olduser:true,msg:"Enter otp sent to mail",token});
+        }
+        
+}
+  }
+catch(err)
+{      
+  console.log(err);
+  console.log('mail not sent');
+  next(err);
+}
+}
+
+module.exports={sent}
+
+

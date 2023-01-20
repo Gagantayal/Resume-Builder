@@ -1,0 +1,35 @@
+const express=require("express");
+const inputcontroller=require("../controller/inputdata");
+const { body }=require("express-validator");
+const tokenverify=require("../middleware/isauth");
+const router=express.Router();
+
+router.post('/personaldetails',[ 
+  body('firstname','Not a valid entry')
+  .isAlpha()
+  .not()
+ .isEmpty(),
+  body('lastname','Not a valid entry')
+  .isAlpha()
+.not()
+ .isEmpty(),
+  body('jobtitle','Not a valid entry')
+.not()
+ .isEmpty(),
+  body('number','Not a valid entry')
+  .isNumeric()
+  .isLength({min:10})
+.not()
+ .isEmpty(),
+  body('city','Not a valid entry')
+  .isAlpha()
+.not()
+ .isEmpty(),
+
+
+],tokenverify.verifytoken,inputcontroller.personaldetails);
+router.post('/education',tokenverify.verifytoken,inputcontroller.education);
+router.post('/experience',tokenverify.verifytoken,inputcontroller.experience);
+router.post('/skills',tokenverify.verifytoken,inputcontroller.skills);
+router.post('/languages',tokenverify.verifytoken,inputcontroller.languages);
+router.post('/aboutme',tokenverify.verifytoken,inputcontroller.aboutme);

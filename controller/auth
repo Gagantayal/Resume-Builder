@@ -1,0 +1,150 @@
+const User=require('../model/user');
+const bcrypt=require("bcryptjs");
+const jwt=require("jsonwebtoken");
+const check=require("../middleware/regex");
+const { validationResult } = require('express-validator');
+
+
+const sign=async (req,res,next)=>{
+   try{
+    const {email}=req.body;
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      const error = new Error('Validation failed.');
+      error.statusCode = 400;
+      error.data = errors.array();
+      next(error);
+    }
+    const old=await User.findOne({email:email.toLowerCase()});
+    if(!old)
+    {
+       const result= await User.create({
+         email:email.toLowerCase(),
+
+     });
+     req.user=old;
+     next();
+   }
+     else{ 
+      if(old.password!="null")
+      {
+         const token=jwt.sign({email:emailId.toLowerCase()},process.env.secretkey,{expiresIn:"1d"});
+         const updated= await User.updateOne({email:emailId.toLowerCase()},{
+           $set:{
+              token
+           }});  
+      return res.status(201).json({success:true,password:true,olduser:true,msg:"Enter password to continue",token});
+         }
+         else{
+            req.user=old;
+            next();
+         }
+   }
+
+
+   }
+catch(error){
+   console.log(error);
+   next(error);
+
+}
+}
+
+const verifyotp=async (req,res,next)=>{
+   try{
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        const error = new Error('Validation failed.');
+        error.statusCode = 400;
+        error.data = errors.array();
+        next(error);
+      }
+      const otp=req.body.otp;
+      const user=await User.findOne({email:req.user.email});
+      const result=await bcrypt.compare(otp,user.otp);
+      if(result)
+      {
+         
+         return res.status(201).json({success:true,msg:"OTP verified",user});
+      }
+      return res.status(401).json({success:false,msg:"Wrong OTP entered"});
+      
+
+   }
+   catch(err)
+   {
+      console.log(err);
+      next(err);
+   }
+}
+const verifypassword=async (req,res,next)=>{
+   try{
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        const error = new Error('Validation failed.');
+        error.statusCode = 400;
+        error.data = errors.array();
+        next(error);
+      }
+      const password=req.body.password;
+      const user=await User.findOne({email:req.user.email});
+      const result=await bcrypt.compare(password,user.password);
+      const token=jwt.sign({email:email.toLowerCase()},process.env.secretkey,{expiresIn:"1d"});
+      if(result)
+      {
+         return res.status(201).json({success:true,msg:"Password verified",token,user});
+      }
+      return res.status(401).json({success:false,msg:"Wrong password"});
+      
+
+   }
+   catch(err)
+   {
+      console.log(err);
+      next(err);
+   }
+}
+
+
+
+const setpassword=async (req,res,next)=>{
+   try{
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        const error = new Error('Validation failed.');
+        error.statusCode = 400;
+        error.data = errors.array();
+        next(error);
+      }
+     const password=req.body.password;
+     
+      if(!check.checkpassword(password))
+     {
+      return res.status(400).json({success:false,msg:"Please enter a strong password"});
+     }
+     const encpassword=await bcrypt.hash(password,12);
+     const updated= await User.updateOne({email:req.user.email},{
+      $set:{
+         password:encpassword
+      }});
+      if(updated)
+      {
+         return res.status(201).json({success:true,msg:"Password added",user});
+      }
+
+      return res.status(500).json({success:false,msg:"Password not added"});
+
+     
+   }
+   catch(err){
+      console.log(err);
+      next(err);
+   }
+}
+
+module.exports={
+   sign,
+   verifyotp,
+   verifypassword,
+   setpassword
+}

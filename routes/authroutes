@@ -1,0 +1,43 @@
+const express=require("express");
+const authcontroller=require("../controller/auth");
+const { body }=require("express-validator");
+const tokenverify=require("../middleware/isauth");
+const mailer=require("../middleware/mailer");
+
+
+
+const router=express.Router();
+
+router.post('/sign',
+[
+   body('email','Please enter a valid mail')
+   .normalizeEmail()
+   .isEmail()
+   .not()
+    .isEmpty()
+],authcontroller.sign,mailer.sent);
+
+  router.post('/verifyotp',
+  [
+    body('otp','Please enter a valid otp')
+    .isLength({min:4})
+  ],tokenverify.verifytoken,authcontroller.verifyotp);
+  
+  router.post('/verifypassword',
+  [
+    body('password','Please enter a valid otp')
+    .isLength({min:8})
+  ],tokenverify.verifytoken,authcontroller.verifypassword);
+
+
+  router.post('/setpassword',
+  [
+    body('password','Please enter a valid mail')
+    .not()
+     .isEmpty(),
+  ],tokenverify.verifytoken,authcontroller.setpassword);
+
+    
+
+module.exports=router;
+

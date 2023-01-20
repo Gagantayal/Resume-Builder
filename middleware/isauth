@@ -1,0 +1,29 @@
+const jwt=require("jsonwebtoken");
+const User=require("../model/user");
+const verifytoken=async (req,res,next)=>{
+    try{
+        let token=req.headers['accesstoken']||req.headers['authorization'];
+        if(!token)
+            return res.status(401).json({success:false,msg:"Please login or signup"});
+        token=token.replace(/^Bearer\s+/,"")
+        const verify=await jwt.verify(token,process.env.secretkey,
+        async (err,payload)=>{
+            if(err){
+                return res.status(405).json({success:false,msg:"Invalid or expired token"});
+            }
+            const {email}=payload;
+            const user=await User.findOne({email});
+            req.user=user;
+            console.log(req.user);
+            next();
+        });
+        }
+        catch(error){
+             next(error);    
+
+        }
+}
+
+module.exports={
+    verifytoken
+}

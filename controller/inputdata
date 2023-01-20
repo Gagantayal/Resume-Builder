@@ -1,0 +1,157 @@
+const User=require('../model/user');
+const check=require("../middleware/regex");
+
+
+
+
+
+const personaldetails=async (req,res,next)=>{
+    try{
+    const {firstname,lastname,jobtitle,number,city,state,tagline}=req.body;
+    if(check.checkname(firstname)&&check.checkname(lastname))
+    {
+    const update=await User.updateOne({email:req.user.email},{
+        $set:{
+            firstname,
+            lastname,
+            jobtitle,
+            number,
+            city,
+            state,
+            tagline
+        }});
+        const user=await User.findOne({email:req.user.email})
+        if(updated)
+        {
+            return res.status(201).json({success:true,msg:"Personal details added",user});
+        }
+    }
+}
+catch(err)
+{
+    console.log(err)
+    throw(err);
+}
+}
+const education=async (req,res,next)=>{
+    try{
+    const {school,degree,syear,gyear,feild}=req.body;
+    const update=await User.updateOne({email:req.user.email},{
+        $push:{
+           "education.school":school,
+           "education.degree":degree,
+           "education.syear":syear,
+           "education.gyear":gyear,
+           "education.feild":feild,
+
+        }});
+        if(updated)
+        {
+            const user=await User.findOne({email:req.user.email})
+            return res.status(201).json({success:true,msg:"Education details added",user});
+        }
+}
+catch(err)
+{
+    console.log(err)
+    throw(err);
+}
+}
+const experience=async (req,res,next)=>{
+    try{
+    const {jobtitle,project,startm,starty,endm,endy,description}=req.body;
+    const update=await User.updateOne({email:req.user.email},{
+        $push:{
+           "experience.jobtitle":jobtitle,
+           "experience.project":project,
+           "experience.startm":startm,
+           "experience.starty":starty,
+           "experience.endm":endm,
+           "experience.endy":endy,
+           "experience.description":description
+
+        }});
+        if(updated)
+        {
+            const user=await User.findOne({email:req.user.email})
+            return res.status(201).json({success:true,msg:"Experience details added",user});
+        }
+}
+catch(err)
+{
+    console.log(err)
+    throw(err);
+}
+}
+const languages=async (req,res,next)=>{
+    try{
+    const {languages}=req.body;
+    const update=await User.updateOne({email:req.user.email},{
+        $push:{
+          languages:languages
+
+        }});
+        if(updated)
+        {
+            const user=await User.findOne({email:req.user.email})
+            return res.status(201).json({success:true,msg:"Language added",user});
+        }
+}
+catch(err)
+{
+    console.log(err)
+    throw(err);
+}
+}
+const skills=async (req,res,next)=>{
+    try{
+    const {skills}=req.body;
+    const update=await User.updateOne({email:req.user.email},{
+        $push:{
+          skills:skills
+
+        }});
+        if(updated)
+        {
+            const user=await User.findOne({email:req.user.email})
+            return res.status(201).json({success:true,msg:"Skill added",user});
+        }
+}
+catch(err)
+{
+    console.log(err)
+    throw(err);
+}
+}
+
+const aboutme=async (req,res,next)=>{
+    try{
+    const {aboutme}=req.body;
+    const update=await User.updateOne({email:req.user.email},{
+        $set:{
+          aboutme
+
+        }});
+        if(updated)
+        {
+            const user=await User.findOne({email:req.user.email})
+            return res.status(201).json({success:true,msg:"Skill added",user});
+        }
+}
+catch(err)
+{
+    console.log(err)
+    throw(err);
+}
+}
+
+
+module.exports={
+    personaldetails,
+    education,
+    experience,
+    languages,
+    skills,
+    aboutme
+}
+
