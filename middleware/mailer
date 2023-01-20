@@ -2,23 +2,36 @@ const User = require('../model/user');
 const sgMail = require('@sendgrid/mail');
 const bcrypt=require("bcryptjs");
 const jwt=require("jsonwebtoken")
+const nodemailer=require('nodemailer')
+
+
 
 const sent=async (req,res,next)=>{
   try{
   const emailId=req.body.email;
-  sgMail.setApiKey(process.env.sgapi);
+  const transport=nodemailer.createTransport({
+    service:'gmail',
+    auth:{
+        user:"gagantayal2003@gmail.com",
+        pass:"espchwfuopssmeyn",
+    },
+    tls: {
+        rejectUnauthorized: false
+    }
+})
   const otpGenerator = require('otp-generator')
   const old=req.user;
   
   const otp=otpGenerator.generate(4, { upperCaseAlphabets: false,lowerCaseAlphabets: false, specialChars: false });
   
-  const msg = {
-    to: emailId,
-    from: 'gagantayal2003@gmail.com',
-    subject: 'OTP for CrushFind',
-    text: `Your otp is ${otp}`,
-  };
-  const msg2=await sgMail.send(msg);
+  const mailOptions={ 
+     from: 'gagantayal2003@gmail.com',
+     to: emailId,
+     subject: 'OTP for ResumeBuilder',
+     text: `Your otp is ${otp}`,
+ }
+ 
+ const msg2=transport.sendMail(mailOptions)
     if(msg2){
       const hashotp=await bcrypt.hash(otp,12);
       const token=jwt.sign({email:emailId.toLowerCase()},process.env.secretkey,{expiresIn:"1d"});
@@ -46,5 +59,16 @@ catch(err)
 }
 
 module.exports={sent}
+
+
+
+
+
+
+
+
+
+
+
 
 

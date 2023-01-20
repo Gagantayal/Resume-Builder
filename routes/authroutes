@@ -3,10 +3,36 @@ const authcontroller=require("../controller/auth");
 const { body }=require("express-validator");
 const tokenverify=require("../middleware/isauth");
 const mailer=require("../middleware/mailer");
-
-
-
+const multer = require('multer');
 const router=express.Router();
+
+const multerStorage=multer.diskStorage({
+  destination:function(req,file,cb){
+    cb(null,'')
+  },
+  filename:function(req,file,cb){
+    cb(null,`user-${Dat.now()}.jpeg`)
+  }
+});
+
+const filter=function(req,filter,cb){
+  if(file.mimetype.startsWith("image")){
+    cb(null,true)
+  }else{
+    cb(new Error("not an image! pls enter a valid image"))
+  }
+}
+
+
+const upload = multer ({
+  storage: multerStorage,
+  fileFilter: filter
+});
+
+router.post("/pimage",upload.single('photo'),updateProfileImage)
+router.get('/pimage',(req,res)=>{
+  res.sendFile()
+})
 
 router.post('/sign',
 [
