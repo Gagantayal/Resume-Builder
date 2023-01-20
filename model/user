@@ -48,6 +48,9 @@ const userschema=new schema({
     tagline:{
         type:String
     },
+    imagelink:{
+      type:String
+    },
     languages:[{
         type:String
     }],

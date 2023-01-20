@@ -1,47 +1,3 @@
-module.exports = ({
-    profile,
-    name,
-    file,
-    about,
-    experienceList,
-    educationList,
-    skills
-}) => {
-    let mySkills = ""
-
-    user.skills.forEach(element => {
-        mySkills = mySkills + `<p class="technology rounded float-left my-1">${element}</p>`
-    });
-
-    let myExperience = ""
-
-    user.experience.forEach(element => {
-        myExperience = myExperience + `
-        
-        <div>
-            <h3 class="float-left text-secondary">• </h3> <h3 class="ps-3 text-secondary">${element.jobtitle}</h3>
-            <p class="m-0 ps-3">${element.projectname} • ${element.startm} ${element.starty}  ${element.endm} ${element.endy }</p>
-            <p class=" ps-3">${element.description}</p>
-        </div>
-
-        `
-    })
-
-    let myEducation = ""
-
-    user.education.forEach(element => {
-        myEducation = myEducation + `
-        
-        <div>
-            <h3 class="float-left text-secondary">• </h3> <h3 class="ps-3 text-secondary">${element.school}</h3>
-            <p class="m-0 ps-3">${element.degree} • ${element.field} </p>
-            <p class="ps-3">${element.syear} - ${element.gyear}</p>
-        </div>
-
-        `
-    })
-    
-    return `
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -81,8 +37,8 @@ module.exports = ({
         <div>
 
             <div class="px-4">
-                <h2 class="mx-4 font-bold mt-4">${user.firstname + " " + user.lastname } </h2>
-                <p class="mx-4 fs-small mb-2 text-secondary">${user.tagline}</p>
+                <h2 class="mx-4 font-bold mt-4">{{user.firstname+ " " +user.lastname}} </h2>
+                <p class="mx-4 fs-small mb-2 text-secondary">{{user.tagline}}</p>
             </div>
 
             <hr></hr>
@@ -94,31 +50,31 @@ module.exports = ({
                     <h3 class="mb-3 ls-2">• INFO</h3>
 
                     <h4 class="m-0 text-secondary">Position:</h4>
-                    <p class="m-0 mb-2">${user.jobtitle}</p>
+                    <p class="m-0 mb-2">{{user.jobtitle}}</p>
                     <h4 class="m-0 text-secondary">Location:</h4>
-                    <p class="m-0 mb-2">${user.city+" "+user.state}</p>
+                    <p class="m-0 mb-2">{{user.city+" "+user.state}}</p>
                     <h4 class="m-0 text-secondary">Contact:</h4>
-                    <p class="m-0 mb-2">${user.number}</p>
+                    <p class="m-0 mb-2">{{user.number}}</p>
                     <h4 class="m-0 text-secondary">E-Mail:</h4>
-                    <p class="m-0">${user.email}</p>
+                    <p class="m-0">{{user.email}}</p>
 
                     <hr></hr>
 
                     <h3 class="mb-3 ls-2">• LINKS</h3>
 
                     <h4 class="m-0 text-secondary">LinkedIn:</h4>
-                    <p class="m-0 mb-2">${profile.linkedin}</p>
+                    <a class="m-0 mb-2" href="{{user.linkedin}}"></a>
                     <h4 class="m-0 text-secondary">GitHub:</h4>
-                    <p class="m-0 mb-2">${profile.github}</p>
-                    <h4 class="m-0 text-secondary">Website:</h4>
-                    <p class="m-0">${profile.website}</p>
+                    <a class="m-0 mb-2" href="{{user.github}}"></a>
 
                     <hr></hr>
 
                     <h3 class="mb-3 ls-2">• SKILLS</h3>
 
                     <div class="d-flex flex-wrap">
-                        ${mySkills}
+                          {{#each user.skills}}
+                         <p class="technology rounded float-left my-1">{{user.skills}}
+                           {{/each}}
                     </div>
 
                 </div>
@@ -127,19 +83,31 @@ module.exports = ({
 
                     <h3 class="mb-3 ls-2">• ABOUT</h3>
 
-                    <p class="m-0">${user.aboutme}</p>
+                    <p class="m-0">{{user.aboutme}}</p>
 
                     <hr></hr>
 
                     <h3 class="mb-3 ls-2">• WORK EXPERIENCE</h3>
 
-                    ${myExperience}
+                          {{#each user.experience}}
+        <div>
+            <h3 class="float-left text-secondary">• </h3> <h3 class="ps-3 text-secondary">{{user.experience.jobtitle}}</h3>
+            <p class="m-0 ps-3">{{user.experience.projectname}} • {{user.experience.startm}} {{user.experience.starty}}  {{user.experience.endm}} {{user.experience.endy }}</p>
+            <p class=" ps-3">{{user.experience.description}}</p>
+        </div>
+                           {{/each}}
 
                     <hr></hr>
 
                     <h3 class="mb-3 ls-2">• EDUCATION</h3>
 
-                    ${myEducation}
+                          {{#each user.education}}
+        <div>
+            <h3 class="float-left text-secondary">• </h3> <h3 class="ps-3 text-secondary">{{user.education.school}}</h3>
+            <p class="m-0 ps-3">{{user.education.degree}} • {{user.education.field}} </p>
+            <p class="ps-3">{{user.education.syear}} - {{user.education.gyear}}</p>
+        </div>
+                           {{/each}}
 
                 </div>
             </div>
@@ -147,7 +115,3 @@ module.exports = ({
         </div>
     </body>
 </html>
-
-
-`;
-};

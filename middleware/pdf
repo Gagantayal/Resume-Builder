@@ -1,0 +1,74 @@
+const User=require("../model/user");
+const hbs = require('handlebars')
+ 
+const fs = require('fs-extra')
+ 
+const path = require('path')
+const puppeteer = require('puppeteer');
+
+const generatepdf=async (req,res,next)=>{
+    try{
+const user=await User.findOne({email:req.user});
+
+const compile=async function (user){
+    const  filePath=path.join(__dirname,'..','templates',`template1.hbs`)
+
+    const html=await fs.readFile(filePath,'utf8');
+
+    return hbs.compile(html)(user);
+};
+
+const atindex=email.lastIndexOf('@');
+const names=email.substring(0,atindex-1);
+const pdfpath= path.join(__dirname,'..', 'pdf',`${names}.pdf`);
+
+(async function(){
+
+    try{
+        const browser =await puppeteer.launch();
+        const page= await browser.newPage();
+        
+        const content=await compile(user);
+
+
+        await page.setContent(content);
+
+        await page.pdf({
+        path:pdfpath,
+        format:'A4',
+        printBackground:true});
+        console.log("pdf created");
+
+        await browser.close();
+        process.exit();
+    }
+    catch(err)
+    {
+        console.log(err);
+    }
+
+
+})
+
+
+fs.readFile(pdfpath,(err,file)=>{
+    if(err){
+        console.log(err);
+        throw (err);
+    }
+    res.setHeader('Content-Type','application/pdf');
+    res.setHeader('Content-Desposition',`attachment;filename=${names}.pdf`);
+});
+res.send(file);
+
+}
+catch(err)
+{
+    console.log(err);
+    throw(err);
+}
+}
+
+
+
+module.exports={generatepdf}

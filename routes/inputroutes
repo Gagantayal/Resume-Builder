@@ -25,11 +25,85 @@ router.post('/personaldetails',[
   .isAlpha()
 .not()
  .isEmpty(),
-
-
+  body('state','Not a valid entry')
+  .isAlpha()
+.not()
+ .isEmpty(),
+  body('tagline','Not a valid entry')
+.not()
+ .isEmpty(),
 ],tokenverify.verifytoken,inputcontroller.personaldetails);
-router.post('/education',tokenverify.verifytoken,inputcontroller.education);
-router.post('/experience',tokenverify.verifytoken,inputcontroller.experience);
-router.post('/skills',tokenverify.verifytoken,inputcontroller.skills);
-router.post('/languages',tokenverify.verifytoken,inputcontroller.languages);
-router.post('/aboutme',tokenverify.verifytoken,inputcontroller.aboutme);
+
+
+router.post('/education',
+[  body('school','Not a valid entry')
+.not()
+ .isEmpty(),
+ body('degree','Not a valid entry')
+ .not()
+  .isEmpty(),
+  body('syear','Not a valid entry')
+  .isNumeric()
+  .not()
+   .isEmpty(),
+  body('gyear','Not a valid entry')
+  .isNumeric()
+  .not()
+   .isEmpty(),
+  body('feild','Not a valid entry')
+  .isAlpha()
+  .not()
+   .isEmpty(),
+],tokenverify.verifytoken,inputcontroller.education);
+
+
+router.post('/experience',
+[  body('jobtitle','Not a valid entry')
+.not()
+ .isEmpty(),
+ body('project','Not a valid entry')
+ .not()
+  .isEmpty(),
+  body('startm','Not a valid entry')
+  .isNumeric()
+  .not()
+   .isEmpty(),
+  body('starty','Not a valid entry')
+  .isNumeric()
+  .not()
+   .isEmpty(),
+  body('endm','Not a valid entry')
+  .isNumeric()
+  .not()
+   .isEmpty(),
+  body('endy','Not a valid entry')
+  .isNumeric()
+  .not()
+   .isEmpty(),
+  body('description','Not a valid entry')
+  .isAlpha()
+  .not()
+   .isEmpty(),
+],tokenverify.verifytoken,inputcontroller.experience);
+
+
+router.post('/skills',
+[  body('skills','Not a valid entry')
+.not()
+ .isEmpty()
+],tokenverify.verifytoken,inputcontroller.skills);
+
+
+router.post('/languages',[  body('languages','Not a valid entry')
+.not()
+ .isEmpty()],tokenverify.verifytoken,inputcontroller.languages);
+
+
+router.post('/aboutme',
+[  body('aboutme','Not a valid entry')
+.not()
+ .isEmpty()],tokenverify.verifytoken,inputcontroller.aboutme);
+
+ 
+
+ module.exports=router;
