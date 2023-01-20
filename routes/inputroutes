@@ -3,6 +3,7 @@ const inputcontroller=require("../controller/inputdata");
 const { body }=require("express-validator");
 const tokenverify=require("../middleware/isauth");
 const router=express.Router();
+const Upload=require('../middleware/multer')
 
 router.post('/personaldetails',[ 
   body('firstname','Not a valid entry')
@@ -32,7 +33,7 @@ router.post('/personaldetails',[
   body('tagline','Not a valid entry')
 .not()
  .isEmpty(),
-],tokenverify.verifytoken,inputcontroller.personaldetails);
+],tokenverify.verifytoken,Upload.uploadImg.single('image'),inputcontroller.personaldetails);
 
 
 router.post('/education',

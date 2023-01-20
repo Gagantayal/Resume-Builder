@@ -1,0 +1,35 @@
+const mongoose=require('mongoose');
+
+const schema=mongoose.Schema;
+
+const expschema=new schema({
+    jobtitle:{
+        type:String
+},
+projectname:{
+    type:String
+},
+startm:{
+    type:Number
+},
+starty:{
+    type:Number
+},
+endm:{
+    type:Number
+},
+endy:{
+    type:Number
+},
+description:{
+    type:String
+},
+userid:{
+    type:Object,
+    ref:"user"
+     
+}
+})
+const expModel = mongoose.model("experience", expschema);
+
+module.exports = expModel;

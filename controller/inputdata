@@ -1,4 +1,6 @@
 const User=require('../model/user');
+const Experience=require('../model/experience');
+const Education=require('../model/education');
 const check=require("../middleware/regex");
 
 
@@ -8,8 +10,16 @@ const check=require("../middleware/regex");
 const personaldetails=async (req,res,next)=>{
     try{
     const {firstname,lastname,jobtitle,number,city,state,tagline}=req.body;
+
+
     if(check.checkname(firstname)&&check.checkname(lastname))
     {
+
+        let filepath = null;
+        
+        if(req.file !== undefined){
+            filepath = 'uploads/' + req.file.filename;
+        }
     const update=await User.updateOne({email:req.user.email},{
         $set:{
             firstname,
@@ -18,7 +28,7 @@ const personaldetails=async (req,res,next)=>{
             number,
             city,
             state,
-            tagline
+            imglink:filepath
         }});
         const user=await User.findOne({email:req.user.email})
         if(updated)
@@ -36,15 +46,15 @@ catch(err)
 const education=async (req,res,next)=>{
     try{
     const {school,degree,syear,gyear,feild}=req.body;
-    const update=await User.updateOne({email:req.user.email},{
-        $push:{
-           "education.school":school,
-           "education.degree":degree,
-           "education.syear":syear,
-           "education.gyear":gyear,
-           "education.feild":feild,
+    const update=await Education.create({
+           school,
+           degree,
+           syear,
+           gyear,
+           feild,
+           userid:req.user._id
+        });
 
-        }});
         if(updated)
         {
             const user=await User.findOne({email:req.user.email})
@@ -60,17 +70,18 @@ catch(err)
 const experience=async (req,res,next)=>{
     try{
     const {jobtitle,project,startm,starty,endm,endy,description}=req.body;
-    const update=await User.updateOne({email:req.user.email},{
-        $push:{
-           "experience.jobtitle":jobtitle,
-           "experience.project":project,
-           "experience.startm":startm,
-           "experience.starty":starty,
-           "experience.endm":endm,
-           "experience.endy":endy,
-           "experience.description":description
+    const update=await Experience.create({
 
-        }});
+                        jobtitle,
+                         project,
+                          startm,
+                        starty,
+                          endm,
+                           endy,
+                     description,
+                     userid:req.user._id
+
+        });
         if(updated)
         {
             const user=await User.findOne({email:req.user.email})

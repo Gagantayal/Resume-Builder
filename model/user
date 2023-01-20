@@ -58,45 +58,13 @@ const userschema=new schema({
         type:String
     }],
     education:[{
-        school:{
-                type:String
-        },
-        degree:{
-            type:String
-        },
-        syear:{
-            type:Number
-        },
-        gyear:{
-            type:Number
-        },
-        field:{
-            type:String
-        }
+       type:Object,
+       ref:"education"
     }
     ],
     experience:[{
-        jobtitle:{
-                type:String
-        },
-        projectname:{
-            type:String
-        },
-        startm:{
-            type:Number
-        },
-        starty:{
-            type:Number
-        },
-        endm:{
-            type:Number
-        },
-        endy:{
-            type:Number
-        },
-        description:{
-            type:String
-        }
+        type:Object,
+        ref:"education"
     }
     ]
     

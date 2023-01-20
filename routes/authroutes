@@ -6,59 +6,7 @@ const mailer=require("../middleware/mailer");
 const multer = require('multer');
 const router=express.Router();
 const{updateProfileImage}=require('../controller/auth');
-const multerStorage=multer.diskStorage({
-  destination:function(req,file,cb){
-    cb(null,'/public/image')
-  },
-  filename:function(req,file,cb){
-    cb(null,`user-${Date.now()}.jpeg`)
-  }
-});
-// const filter=function(req,file,cb){
-//   if(file.mimetype.startsWith("image")){
-//     cb(null,true)
-//   }else{
-//     cb(new Error("not an image! pls enter a valid image"))
-//   }
-// }
-var storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, '/tmp/my-uploads')
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.fieldname + '-' + Date.now())
-  }
-})
 
-const filter = (req, file, cb) => {
-  try{
-  const fileSize = parseInt(req.headers["content-length"])
-
-  if ((file.mimetype === "image/pdf" || file.mimetype === "image/jpg" || file.mimetype === "image/jpeg" || file.mimetype === "application/octet-stream") && fileSize <= 1282810) {
-      cb(null, true)
-  } else if (file.mimetype === "video/mp4" && fileSize <= 22282810) {
-      cb(null, true)
-  } else {
-      cb(null, false)
-  }
-}
-catch(err){
-  res.send("wrong data");
-}
-}
-
-
-
-
-const upload = multer ({
-  storage: multerStorage,
-  fileFilter: filter
-});
-
-router.post('/pimage',upload.single('photo'),updateProfileImage);
-router.get('/pimage',(req,res)=>{
-  res.sendFile('C:/Users/Gagan Tayal/Desktop/New folder (2)/Resume_Builder/Backend/multer.html')
-})
 
 router.post('/sign',
 [

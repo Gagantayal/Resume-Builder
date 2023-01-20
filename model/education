@@ -1,0 +1,28 @@
+const mongoose=require('mongoose');
+
+const schema=mongoose.Schema;
+
+const eduschema=new schema({
+    school:{
+        type:String
+},
+degree:{
+    type:String
+},
+syear:{
+    type:Number
+},
+gyear:{
+    type:Number
+},
+field:{
+    type:String
+},
+userid:{
+    type:Object,
+    ref:"user"
+}
+})
+const educationModel = mongoose.model("education", eduschema);
+
+module.exports = educationModel;
